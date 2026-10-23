@@ -1,0 +1,623 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Jeffaaay/amr-faultbench/trace_schema_v1.json",
+  "title": "AMR Trace Schema v1 PROPOSAL \u2014 not frozen",
+  "description": "Generic research proposal. No existing firmware compatibility or physical timing claim.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "synthetic",
+    "event_id",
+    "run_id",
+    "jetson_boot_id",
+    "mcu_boot_id",
+    "command_scope",
+    "command_sequence",
+    "command_epoch",
+    "correlation_status",
+    "correlation_reason",
+    "source",
+    "event_type",
+    "rule_id",
+    "decision",
+    "requested_command",
+    "accepted_command",
+    "send_monotonic_ns",
+    "receive_monotonic_ns",
+    "host_clock_domain",
+    "mcu_timestamp_us",
+    "mcu_timer_epoch",
+    "mcu_clock_domain",
+    "mcu_resolution_us",
+    "can_timestamps",
+    "can_timestamp_support",
+    "system_state",
+    "versions",
+    "dropped_event_counters",
+    "timestamp_uncertainty",
+    "parent_event_ids"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0-draft.1"
+    },
+    "synthetic": {
+      "type": "boolean"
+    },
+    "event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "jetson_boot_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mcu_boot_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "command_scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "command_sequence": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 4294967295
+    },
+    "command_epoch": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "correlation_status": {
+      "enum": [
+        "exact",
+        "unresolved",
+        "not_applicable"
+      ]
+    },
+    "correlation_reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source": {
+      "enum": [
+        "jetson",
+        "can",
+        "stm32"
+      ]
+    },
+    "event_type": {
+      "enum": [
+        "COMMAND_SEND",
+        "CAN_TX",
+        "CAN_RX",
+        "COMMAND_ACCEPT",
+        "SAFETY_TRIGGER",
+        "EVENT_RECEIVE",
+        "BOOT",
+        "TRACE_DROP",
+        "STOP_OBSERVED"
+      ]
+    },
+    "rule_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "decision": {
+      "enum": [
+        "ACCEPT",
+        "REJECT",
+        "CLAMP",
+        "SAFE_STOP",
+        "OBSERVE",
+        null
+      ]
+    },
+    "requested_command": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "linear": {
+          "type": "number"
+        },
+        "angular": {
+          "type": "number"
+        },
+        "linear_unit": {
+          "const": "m/s"
+        },
+        "angular_unit": {
+          "const": "rad/s"
+        }
+      },
+      "required": [
+        "linear",
+        "angular",
+        "linear_unit",
+        "angular_unit"
+      ]
+    },
+    "accepted_command": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "linear": {
+          "type": "number"
+        },
+        "angular": {
+          "type": "number"
+        },
+        "linear_unit": {
+          "const": "m/s"
+        },
+        "angular_unit": {
+          "const": "rad/s"
+        }
+      },
+      "required": [
+        "linear",
+        "angular",
+        "linear_unit",
+        "angular_unit"
+      ]
+    },
+    "send_monotonic_ns": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "receive_monotonic_ns": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "host_clock_domain": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mcu_timestamp_us": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 4294967295
+    },
+    "mcu_timer_epoch": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "mcu_clock_domain": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "mcu_resolution_us": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "can_timestamps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "direction",
+          "timestamp_ns",
+          "clock_domain",
+          "capture_point",
+          "resolution_ns",
+          "uncertainty_ns"
+        ],
+        "properties": {
+          "direction": {
+            "enum": [
+              "TX",
+              "RX"
+            ]
+          },
+          "timestamp_ns": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$"
+          },
+          "clock_domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "capture_point": {
+            "enum": [
+              "application_enqueue",
+              "driver_enqueue",
+              "hardware_bus",
+              "host_receive"
+            ]
+          },
+          "resolution_ns": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "uncertainty_ns": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "can_timestamp_support": {
+      "enum": [
+        "available",
+        "unsupported",
+        "unknown",
+        "not_applicable"
+      ]
+    },
+    "system_state": {
+      "type": "object",
+      "required": [
+        "drive_state",
+        "lift_state",
+        "feedback_age_ms",
+        "state_quality"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "drive_state": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lift_state": {
+          "type": "string",
+          "minLength": 1
+        },
+        "feedback_age_ms": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "state_quality": {
+          "enum": [
+            "measured",
+            "synthetic",
+            "unknown"
+          ]
+        }
+      }
+    },
+    "versions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "firmware_commit",
+        "software_commit",
+        "harness_commit",
+        "safety_config_sha256"
+      ],
+      "properties": {
+        "firmware_commit": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "software_commit": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "harness_commit": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "safety_config_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "dropped_event_counters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "jetson",
+        "can",
+        "stm32"
+      ],
+      "properties": {
+        "jetson": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "can": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stm32": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "timestamp_uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "offset_ns",
+        "bound_ns",
+        "notes"
+      ],
+      "properties": {
+        "method": {
+          "enum": [
+            "causal_bounds_only",
+            "validated_offset",
+            "unavailable"
+          ]
+        },
+        "offset_ns": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^-?(0|[1-9][0-9]*)$"
+        },
+        "bound_ns": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^(0|[1-9][0-9]*)$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "parent_event_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "COMMAND_SEND"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "source": {
+            "const": "jetson"
+          },
+          "send_monotonic_ns": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$"
+          },
+          "command_sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "requested_command": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "linear": {
+                "type": "number"
+              },
+              "angular": {
+                "type": "number"
+              },
+              "linear_unit": {
+                "const": "m/s"
+              },
+              "angular_unit": {
+                "const": "rad/s"
+              }
+            },
+            "required": [
+              "linear",
+              "angular",
+              "linear_unit",
+              "angular_unit"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "EVENT_RECEIVE"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "source": {
+            "const": "jetson"
+          },
+          "receive_monotonic_ns": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "SAFETY_TRIGGER"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "source": {
+            "const": "stm32"
+          },
+          "mcu_boot_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mcu_timestamp_us": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "mcu_clock_domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mcu_resolution_us": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "rule_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "decision": {
+            "enum": [
+              "REJECT",
+              "CLAMP",
+              "SAFE_STOP"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "correlation_status": {
+            "const": "exact"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "mcu_boot_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "command_sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "can_timestamp_support": {
+            "const": "available"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "can_timestamps": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "timestamp_uncertainty": {
+            "properties": {
+              "method": {
+                "const": "validated_offset"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "timestamp_uncertainty": {
+            "properties": {
+              "offset_ns": {
+                "type": "string"
+              },
+              "bound_ns": {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]*)$"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
