@@ -1,6 +1,6 @@
 # Trace Schema v1 proposal
 
-Status: DRAFT, prepared October 23. Freeze remains October 25. Root `trace_schema_v1.json` is the authoritative proposal; examples are wholly synthetic. No production wire format is changed.
+Status: DRAFT 1.0.0-draft.2, prepared October 23. Freeze remains October 25. Root `trace_schema_v1.json` is the authoritative proposal; examples are wholly synthetic. No production wire format is changed.
 
 ## Identity and causal matching
 
@@ -12,13 +12,13 @@ Asynchronous faults with no responsible command use null command_sequence and un
 
 ## Event vocabulary
 
-COMMAND_SEND, CAN_TX, CAN_RX, COMMAND_ACCEPT, SAFETY_TRIGGER, EVENT_RECEIVE, BOOT, TRACE_DROP, STOP_OBSERVED. A SAFE_STOP decision means a stop was requested or commanded; it does not mean the vehicle is physically stationary. STOP_OBSERVED needs an independently defined measurement and evidence. Rule IDs and the exact source-to-vocabulary mapping remain review items for October 25.
+COMMAND_SEND, CAN_TX, CAN_RX, COMMAND_ACCEPT, SAFETY_TRIGGER, EVENT_RECEIVE, BOOT, TRACE_DROP, STOP_OBSERVED, STOP_REQUEST, RECOVERY_REQUEST, RECOVERY_RESULT, STATE_TRANSITION. A SAFE_STOP decision means a stop was requested or commanded; it does not mean the vehicle is physically stationary. STOP_OBSERVED needs an independently defined measurement and evidence. Rule IDs and the exact source-to-vocabulary mapping remain review items for October 25.
 
 ## Timestamp uncertainty model
 
 Jetson send_monotonic_ns and receive_monotonic_ns are decimal strings to avoid JSON/JavaScript integer precision loss. Capture immediately around defined send/receive boundaries using the same monotonic clock and boot domain. They are not ROS simulated time or wall clock. CAN timestamps state direction, capture point, resolution, uncertainty and clock domain; unavailable hardware timestamps remain explicitly unsupported or unknown. A driver enqueue timestamp is not an on-wire timestamp.
 
-MCU mcu_timestamp_us is uint32 with an explicit timer epoch, boot ID, domain and resolution. If source time is milliseconds, conversion to microseconds retains resolution_us=1000 and must preserve the original counter/wrap metadata in the adapter manifest. Unit conversion does not create microsecond accuracy. Existing production timestamps must not be silently reinterpreted as the new counter.
+MCU mcu_timestamp_us is the uint32 remainder of a microsecond representation. mcu_counter preserves original raw ticks, width, tick period and native wrap epoch on every timestamped record. Compute mcu_timer_epoch from expanded microseconds, not from the native wrap count; retain unknown epoch as null. Millisecond source time keeps mcu_resolution_us=1000. Unit conversion does not create microsecond accuracy. See TRACE_DRAFT2_REVIEW.md for exact normalization and unknown-wrap rules; existing production timestamps are not silently reinterpreted.
 
 Independent MCU and Jetson timestamps cannot be subtracted. A causally associated trigger that occurs after command send and before event receive is bounded by the host interval. The synthetic example has host send=1,000,000,000 ns, receive=1,009,000,000 ns, MCU trigger=85,000 us in a separate clock. Its host interval is 9 ms; the trigger occurrence is only bounded inside that interval. This does not isolate one-way transport, control latency, motor response or braking time. Include timestamp resolution, capture jitter and all unbounded terms; report unknown uncertainty instead of fabricated confidence.
 
@@ -31,3 +31,5 @@ Use bounded non-blocking enqueue with static storage and bounded ISR work. No fo
 ## Draft verification
 
 Install requirements-dev.txt in an isolated Python environment and run `python -m unittest discover -s tests -v`. These tests exercise schema/matching contracts with synthetic fixtures only. They do not execute ROS 2, CAN buses, firmware, controllers or a fault scenario. October 25 review must settle transport mapping and test completeness before freezing.
+
+Draft 2 adds explicit evidence levels, classic CAN frame metadata, native counter normalization and scoped stopping observations, with a runnable offline review tool. See [review and migration](TRACE_DRAFT2_REVIEW.md). Validation is contract conformance only, never an experiment verdict.

@@ -72,7 +72,8 @@ class ProposalTests(unittest.TestCase):
             {'command_sequence': 42, 'host_interval_ns': 9000000, 'complete_capture': True}])
 
     def test_mcu_clock_is_never_subtracted_from_host_clock(self):
-        self.events[2]['mcu_timestamp_us'] = 4294967295
+        self.events[2]['mcu_timestamp_us'] = 4294967000
+        self.events[2]['mcu_counter']['raw_ticks'] = '4294967'
         self.assertEqual(reconcile(self.events)[0]['host_interval_ns'], 9000000)
 
     def test_wrong_units_rejected(self):
@@ -116,6 +117,7 @@ class ProposalTests(unittest.TestCase):
 
     def test_real_evidence_requires_version_provenance(self):
         self.events[0]['synthetic'] = False
+        self.events[0]['evidence_level'] = 'HIL'
         with self.assertRaisesRegex(ValueError, 'provenance'): reconcile(self.events)
 
 

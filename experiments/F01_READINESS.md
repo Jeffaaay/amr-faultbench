@@ -37,3 +37,5 @@
 机器输出至少区分 PASS / FAIL / INCONCLUSIVE / INVALID，并包含 evidence_level（synthetic / model / extracted_logic / HIL / robot）、fault_injected、fault_detected、stop_requested、stop_confirmed、unexpected_transitions、capture_complete。无证据时使用 unknown/null，不能默认通过。
 
 首个模型通过只证明测试闭环能跑，不能证明制动性能、真实固件安全或 Agent 优势。
+
+补充：tools/trace_review.py 已能离线检查草案记录。它不是此文件预定的 run_experiment.py，也未实现 F01 控制器/注入器。SAFE_STOP、停止观测和复位完成须分开；wheel_feedback 停止证据不能冒充车体物理测量。

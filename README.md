@@ -38,3 +38,5 @@ The shared harness lives only in Jeffaaay/amr-faultbench. Exact dependency pins 
 - [六类故障与编号草案](faults/CATALOG_PROPOSAL.md)
 - [恢复技能边界](policies/RECOVERY_CONTRACT.md)
 - [四组方法的评估协议](evaluators/METRICS_PROTOCOL.md)
+
+- [Trace 草案 2 与离线检查命令](docs/TRACE_DRAFT2_REVIEW.md)
