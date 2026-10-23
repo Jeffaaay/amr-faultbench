@@ -30,3 +30,11 @@ The shared harness lives only in Jeffaaay/amr-faultbench. Exact dependency pins 
 
 - [Research execution report](docs/RESEARCH_REPORT.md)
 - [Prioritized GitHub backlog](docs/ISSUES.md)
+
+- [中文执行顺序与当前边界](docs/EXECUTION_ROADMAP.md)
+- [功能基准登记](docs/BASELINE_REGISTER.md)
+
+- [首个故障实验的验收说明](experiments/F01_READINESS.md)
+- [六类故障与编号草案](faults/CATALOG_PROPOSAL.md)
+- [恢复技能边界](policies/RECOVERY_CONTRACT.md)
+- [四组方法的评估协议](evaluators/METRICS_PROTOCOL.md)

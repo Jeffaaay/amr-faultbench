@@ -1,0 +1,51 @@
+{
+  "manifest_version": 1,
+  "status": "NOT_EXECUTABLE_TEMPLATE",
+  "experiment": "F01_TPDO_DROPOUT",
+  "implementation_window": "2026-10-26/2026-11-01",
+  "schema_freeze_approved": false,
+  "evidence_level": null,
+  "controller_implementation_kind": null,
+  "versions": {
+    "source_commit": null,
+    "source_digest": null,
+    "configuration_digest": null,
+    "harness_commit": null,
+    "controller_commit": null,
+    "policy_commit": null,
+    "evaluator_commit": null,
+    "schema_digest": null
+  },
+  "runtime": {
+    "transport": "isolated_virtual_only",
+    "physical_can_enabled": false,
+    "physical_serial_enabled": false,
+    "robot_access_enabled": false,
+    "seed": null,
+    "clock_domain": null
+  },
+  "fault": {
+    "id": "F01_TPDO_DROPOUT",
+    "target_node": null,
+    "start_ns": null,
+    "duration_ns": null,
+    "drop_tpdo": true,
+    "preserve_heartbeat": true
+  },
+  "controller_parameters": {
+    "feedback_period_ns": null,
+    "feedback_stale_threshold_ns": null,
+    "control_period_ns": null,
+    "recovery_authority": null
+  },
+  "termination": {
+    "maximum_simulated_duration_ns": null,
+    "on_unknown": "inconclusive"
+  },
+  "outputs": {
+    "trace": null,
+    "injection_audit": null,
+    "evaluation": null
+  },
+  "note": "All required unknowns must be resolved before execution; no result is implied."
+}
